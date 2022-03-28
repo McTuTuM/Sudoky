@@ -59,14 +59,34 @@ class MainWindow():
         for i in range(1, 10):
             for j in range(1, 10):
                 if x > x_start + step * (i - 1) and x < x_start + step * i and y > y_start + step * (j - 1) and y < y_start + step * j:
+                    
                     print('__', i, j, x, y)
                     print('***', self.table[j - 1][i - 1])
+                    
+                    # sur = pygame.image.load('png/1.png')
+                    # rec = sur.get_rect(center  = ((x_start + int(1/2 * step) + step * (i - 1)) + 1, ( y_start + int(1/2 * step) + step * (j - 1)) + 1))
+                    # self.screen.blit(sur, rec)
+                    # pygame.display.update
+
+    def draw_numb(self):
+        x_start = 50
+        y_start = 60
+        step = 70
+        for i in range(1, 10):
+            for j in range(1, 10):
+                num = self.table[j - 1][i - 1]
+                sur = pygame.image.load(f'png/{str(num)}.png')
+                rec = sur.get_rect(center  = ((x_start + int(1/2 * step) + step * (i - 1)) + 1, ( y_start + int(1/2 * step) + step * (j - 1)) + 1))
+                self.screen.blit(sur, rec)
+                pygame.display.update
+
     def start(self):
         self.start_game = True
         threading.Thread(target=self.timer, daemon= True).start()
         self.table = CheckSul.done_or_not()
         self.draw_win_after()
         self.draw_grid()
+        self.draw_numb()
 
     def timer(self): 
         f1 = pygame.font.Font(None, 48)
