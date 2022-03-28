@@ -1,8 +1,8 @@
-import re
 from time import sleep
 import pygame
 from pygame.color import THECOLORS
 import sys, threading
+from logic import CheckSul
 
 
 pygame.init
@@ -14,6 +14,7 @@ class MainWindow():
         self.game_over = False
         self.start_game = False
         self.game_mode = 0
+        self.table = []
         self.core()
         
 
@@ -46,6 +47,7 @@ class MainWindow():
                     
                 if x > 730 and x < 880 and y > 160 and y < 240:
                     self.start_game = False
+                    self.game_mode = 0
                     self.draw_win_before()
                 if x > 50 and x < 680 and y > 60 and y < 690:
                     self.check(x, y)
@@ -58,9 +60,11 @@ class MainWindow():
             for j in range(1, 10):
                 if x > x_start + step * (i - 1) and x < x_start + step * i and y > y_start + step * (j - 1) and y < y_start + step * j:
                     print('__', i, j, x, y)
+                    print('***', self.table[j - 1][i - 1])
     def start(self):
         self.start_game = True
         threading.Thread(target=self.timer, daemon= True).start()
+        self.table = CheckSul.done_or_not()
         self.draw_win_after()
         self.draw_grid()
 
@@ -70,12 +74,12 @@ class MainWindow():
             for m2 in range(10):
                 for s1 in range(6):
                     for s2 in range(10):
-                        pygame.draw.rect(self.screen, 'white', [(730, 260), (150, 50)])
-                        self.screen.blit(f1.render(f"{m1}{m2}:{s1}{s2}", True, 'black'), (750, 280))        
                         if self.start_game == False:
                            return                         
+                        pygame.draw.rect(self.screen, 'white', [(730, 260), (150, 50)])
+                        self.screen.blit(f1.render(f"{m1}{m2}:{s1}{s2}", True, 'black'), (760, 265))        
+                        pygame.display.update()
                         sleep(1)
-                        print('************')
             
 
     def draw_grid(self):
