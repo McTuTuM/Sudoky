@@ -18,6 +18,8 @@ class MainWindow():
         self.table = []
         self.fin_table = []
         self.key, self.i, self.j = 0, 0, 0
+        self.life = 3
+        self.mode_pause = False
         self.core()
         
 
@@ -28,6 +30,9 @@ class MainWindow():
     def core(self):
         self.draw_win_before()
         while self.game_over == False:
+            if self.life <= 0:
+                self.game_over = True
+                print('gameover')
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
                     self.click(event.pos[0], event.pos[1], event.type)
@@ -40,6 +45,7 @@ class MainWindow():
                 pygame.display.flip()
             
     def click(self, x, y, event_type):
+        f1 = pygame.font.Font(None, 48)
         if event_type == pygame.MOUSEBUTTONUP: #only bitton options or not....
             if x > 730 and x < 880 and y > 610 and y < 690:
                 self.exit()
@@ -51,6 +57,16 @@ class MainWindow():
             else:
                 if x > 730 and x < 880 and y > 60 and y < 140:
                     print('__________________')
+                    if self.mode_pause == False:
+                        self.pause()
+                        self.mode_pause = True
+                    else:
+                        pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
+                        self.draw_grid()
+                        self.draw_numbs()   
+                        pygame.draw.rect(self.screen, 'white', [(730, 60), (150, 80)])
+                        self.screen.blit(f1.render("Пауза", True, 'black'), (745, 80))
+                        self.mode_pause = False   
                     
                 if x > 730 and x < 880 and y > 160 and y < 240:
                     self.start_game = False
@@ -59,6 +75,14 @@ class MainWindow():
                     self.draw_win_before()
                 if x > 50 and x < 680 and y > 60 and y < 690:
                     self.check(x, y)
+
+    def pause(self):
+        f1 = pygame.font.Font(None, 72)
+        f2 = pygame.font.Font(None, 32)
+        pygame.draw.rect(self.screen, (200,200,200), [(50, 60), (630, 630)])
+        pygame.draw.rect(self.screen, 'white', [(730, 60), (150, 80)])
+        self.screen.blit(f2.render("Возобновить", True, 'black'), (735, 80))
+        self.screen.blit(f1.render("Пауза", True, 'black'), (300, 330))
 
     def check(self, x, y):
         x_start = 50
@@ -91,10 +115,12 @@ class MainWindow():
         if self.fin_table[self.j - 1][self.i - 1] == self.key:
             self.table[self.j - 1][self.i - 1] = self.key
         else:
-            print("nOOOOOOOOOOOOOOOOOO")
+            self.life -= 1
+            print(self.life)
 
         if self.fin_table == self.table:
             print('game win')
+            self
 
     def draw_numbs(self):
         x_start = 50
@@ -110,10 +136,11 @@ class MainWindow():
                     pygame.display.update
 
     def start(self):
+        self.life = 3
         self.press = False
         self.start_game = True
         threading.Thread(target=self.timer, daemon= True).start()
-        check_sul = CheckSul()
+        check_sul = CheckSul(self.game_mode)
         check_sul._creater_table()
         self.table = check_sul.game_table      
         self.fin_table = check_sul.table  
@@ -132,6 +159,8 @@ class MainWindow():
                         pygame.draw.rect(self.screen, 'white', [(730, 260), (150, 50)])
                         self.screen.blit(f1.render(f"{m1}{m2}:{s1}{s2}", True, 'black'), (760, 265))        
                         pygame.display.update()
+                        while self.mode_pause == True:
+                            sleep(0.1)
                         sleep(1)
         return
             
