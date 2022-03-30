@@ -2,11 +2,13 @@ import numpy as np
 import random
 import copy
 
+
 class CheckSul:
-    def __init__(self):
+    def __init__(self, game_mode):
         self.game_table = []
         self.table = []
         self.n = 3
+        self.game_mode = game_mode
 
        
     def _creater_table(self):
@@ -64,11 +66,17 @@ class CheckSul:
 
     def diff(self):
         # a = self.table.copy()
+        if self.game_mode == 1:
+            diff = 0.7
+        elif self.game_mode == 2:
+            diff = 0.6
+        else:
+            diff = 0.5
         for i in range(self.n**2):
             for j in range(self.n**2):
                 if self.game_table[i][j] == 0:
                     continue
-                if random.random() > 0.7:
+                if random.random() > diff:
                     self.game_table[i][j] = 0
         # self.game_table = a
         print()
