@@ -67,7 +67,7 @@ class CheckSul:
     def diff(self):
         # a = self.table.copy()
         if self.game_mode == 1:
-            diff = 0.9
+            diff = 0.7
         elif self.game_mode == 2:
             diff = 0.6
         else:
