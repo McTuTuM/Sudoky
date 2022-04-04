@@ -92,15 +92,21 @@ class MainWindow():
             for j in range(1, 10):
                 if x > x_start + step * (i - 1) and x < x_start + step * i and y > y_start + step * (j - 1) and y < y_start + step * j:
                     num = self.table[j - 1][i - 1]
+                    pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)]) # game_field
+                    self.draw_grid()
+                    self.draw_numbs()
                     if num == 0:
                         self.press = True
-                        pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)]) # game_field
-                        self.draw_grid()
-                        self.draw_numbs()
+                        # self.draw_grid()
+                        # self.draw_numbs()
                         self.red_sqrt((x_start + step * (i - 1)) + 3, (y_start + step * (j - 1)) + 3, step - 5)
                         self.i, self.j = i, j
                         print('empty', self.fin_table[j - 1][i - 1])
-                    
+                    else:      
+                        for i_0 in range(1, 10):
+                            for j_0 in range(1, 10):
+                                if num == self.table[j_0 - 1][i_0 - 1]:
+                                    self.red_sqrt((x_start + step * (i_0 - 1)) + 3, (y_start + step * (j_0 - 1)) + 3, step - 5)
                     print('__', i, j, x, y)
                     print('***', self.table[j - 1][i - 1])
                     
