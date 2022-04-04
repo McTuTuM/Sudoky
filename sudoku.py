@@ -19,10 +19,12 @@ class MainWindow():
         self.key, self.i, self.j = 0, 0, 0
         self.live = 3
         self.mode_pause = False
-
         self.core()
-        
 
+    def fonts(self, font_size, text, x, y, color = "black"):
+        f = pygame.font.Font(None, font_size)
+        self.screen.blit(f.render(text, True, color), (x, y))
+   
     def exit(self):
         pygame.quit()
         sys.exit()
@@ -37,7 +39,7 @@ class MainWindow():
                         self.game_over = False
                         self.game_mode = 0
                         self.draw_win_before()
-                if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     self.click(event.pos[0], event.pos[1], event.type)
                 if event.type == pygame.QUIT:
                     self.exit()
@@ -48,8 +50,7 @@ class MainWindow():
                 pygame.display.flip()
             
     def click(self, x, y, event_type):
-        f1 = pygame.font.Font(None, 48)
-        if event_type == pygame.MOUSEBUTTONUP: #only bitton options or not....
+        if event_type == pygame.MOUSEBUTTONDOWN:
             if x > 730 and x < 880 and y > 610 and y < 690:
                 self.exit()
             if self.start_game == False:
@@ -59,17 +60,15 @@ class MainWindow():
                     self.game_mode_set()
             else:
                 if x > 730 and x < 880 and y > 60 and y < 140:
-                    print('__________________')
                     if self.mode_pause == False:
-                        self.pause()
-                        self.mode_pause = True
+                        self.pause() 
                     else:
                         self.mode_pause = False   
                         pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
                         self.draw_grid()
                         self.draw_numbs()   
                         pygame.draw.rect(self.screen, 'white', [(730, 60), (150, 80)])
-                        self.screen.blit(f1.render("Пауза", True, 'black'), (755, 80))
+                        self.fonts(48, "Пауза", 755, 80)
                     
                 if x > 730 and x < 880 and y > 160 and y < 240:
                     self.start_game = False
@@ -79,12 +78,11 @@ class MainWindow():
                     self.check(x, y)
 
     def pause(self):
-        f1 = pygame.font.Font(None, 72)
-        f2 = pygame.font.Font(None, 32)
+        self.mode_pause = True
         pygame.draw.rect(self.screen, (200,200,200), [(50, 60), (630, 630)])
         pygame.draw.rect(self.screen, 'white', [(730, 60), (150, 80)])
-        self.screen.blit(f2.render("Возобновить", True, 'black'), (735, 85))
-        self.screen.blit(f1.render("Пауза", True, 'black'), (300, 330))
+        self.fonts(32, "Возобновить", 735, 85)
+        self.fonts(72, "Пауза", 300, 330)
 
     def check(self, x, y):
         x_start = 50
@@ -102,11 +100,11 @@ class MainWindow():
                         self.red_sqrt((x_start + step * (i - 1)) + 3, (y_start + step * (j - 1)) + 3, step - 5)
                         self.i, self.j = i, j
                         print('empty', self.fin_table[j - 1][i - 1])
+                    
                     print('__', i, j, x, y)
                     print('***', self.table[j - 1][i - 1])
                     
     def input_key(self, key):
-        f = pygame.font.Font(None, 80)
         self.key = key - 48
         x_start = 50
         y_start = 60
@@ -114,6 +112,9 @@ class MainWindow():
         sur = pygame.image.load(f'png/{str(self.key)}.png')
         rec = sur.get_rect(center  = ((x_start + int(1/2 * step) + step * (self.i - 1)) + 1, ( y_start + int(1/2 * step) + step * (self.j - 1)) + 1))
         self.screen.blit(sur, rec)
+        self.correct()
+
+    def correct(self):
         if self.fin_table[self.j - 1][self.i - 1] == self.key:
             self.table[self.j - 1][self.i - 1] = self.key
         else:
@@ -122,28 +123,26 @@ class MainWindow():
             sur_heart = pygame.image.load('png/heart.png')
             rec_heart = sur_heart.get_rect(center = (790, 370))# 120 60
             self.screen.blit(sur_heart, rec_heart)
-            self.screen.blit(f.render(str(self.live), True, 'black'), (850, 343))
+            self.fonts(80, str(self.live), 850, 343)
             print(self.live)
 
         if self.fin_table == self.table:
-            self.win()
-            self.game_over = True
+            self.win() 
         if self.live <= 0:
             self.lose()
-            self.game_over = True
         pygame.display.update
 
     def lose(self):
-        f = pygame.font.Font(None, 72)
+        self.game_over = True
         pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
-        self.screen.blit(f.render("Повезет в другой раз..:)", True, 'black'), (60, 330))
-        self.screen.blit(f.render("Нажмите любую клавишу", True, 'black'), (70, 370))        
+        self.fonts(70, "Повезет в другой раз..:)", 65, 330)
+        self.fonts(65, "Нажмите любую клавишу", 70, 400)   
 
     def win(self):
-        f = pygame.font.Font(None, 72)
+        self.game_over = True
+        self.fonts(70, "Победа!!!", 300, 330)
+        self.fonts(65, "Нажмите любую клавишу", 70, 400)
         pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
-        self.screen.blit(f.render("Победа!!!", True, 'black'), (300, 330))
-        self.screen.blit(f.render("Нажмите любую клавишу", True, 'black'), (70, 370))
         pygame.display.update
 
     def draw_numbs(self):
@@ -160,7 +159,6 @@ class MainWindow():
                     pygame.display.update
 
     def start(self):
-        threading.Thread(target=self.timer, daemon= True).start()
         self.live = 3
         self.press = False
         self.start_game = True
@@ -168,9 +166,11 @@ class MainWindow():
         check_sul._creater_table()
         self.table = check_sul.game_table      
         self.fin_table = check_sul.table  
+        sleep(0.1)
         self.draw_win_after()
         self.draw_grid()
         self.draw_numbs()
+        threading.Thread(target=self.timer, daemon= True).start()
 
     def timer(self): 
         f1 = pygame.font.Font(None, 48)
@@ -210,36 +210,35 @@ class MainWindow():
         pygame.draw.line(self.screen, 'black', (x0_1, y0_1), (x1_1, y1_1), w)
 
     def game_mode_set(self):
-        f1 = pygame.font.Font(None, 48)
         self.game_mode += 1
         if self.game_mode > 3:
             self.game_mode -= 3
         if self.game_mode == 1:
             pygame.draw.rect(self.screen, 'green', [(730, 160), (150, 80)])
-            self.screen.blit(f1.render("Легкая", True, 'black'), (750, 180))
+            self.fonts(48, "Легкая", 750, 180) 
+            # self.screen.blit(f1.render("Легкая", True, 'black'), (750, 180))
 
         elif self.game_mode == 2:
             pygame.draw.rect(self.screen, 'yellow', [(730, 160), (150, 80)])
-            self.screen.blit(f1.render("Средняя", True, 'black'), (732, 180))  
+            self.fonts(48, "Средняя", 732, 180) 
+            # self.screen.blit(f1.render("Средняя", True, 'black'), (732, 180))  
         else:
             pygame.draw.rect(self.screen, 'red', [(730, 160), (150, 80)])
-            self.screen.blit(f1.render("Сложная", True, 'black'), (732, 180))
+            self.fonts(48, "Сложная", 732, 180) 
+            # self.screen.blit(f1.render("Сложная", True, 'black'), (732, 180))
 
     def draw_win_after(self):
-        f = pygame.font.Font(None, 80)
-        f1 = pygame.font.Font(None, 48)
-        f2 = pygame.font.Font(None, 38)
         pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
         pygame.draw.rect(self.screen, 'white', [(730, 60), (150, 80)]) #buttom start game
-        self.screen.blit(f1.render("Пауза", True, 'black'), (755, 80))
+        self.fonts(48, "Пауза", 755, 80) 
         pygame.draw.rect(self.screen, 'white', [(730, 160), (150, 80)])  #bottom_pause
-        self.screen.blit(f2.render('Новая игра', True, 'black'), (733, 185))
+        self.fonts(38, 'Новая игра', 733, 185) 
         pygame.draw.rect(self.screen, 'white', [(730, 260), (150, 50)]) #lable_time
         pygame.draw.rect(self.screen, 'white', [(730, 330), (150, 80)]) # rect number lives
         sur_heart = pygame.image.load('png/heart.png')
         rec_heart = sur_heart.get_rect(center = (790, 370))# 120 60
         self.screen.blit(sur_heart, rec_heart)
-        self.screen.blit(f.render(str(self.live), True, 'black'), (850, 343))
+        self.fonts(80, str(self.live), 850, 343) 
 
 
     def draw_win_before(self):
