@@ -6,6 +6,7 @@ from logic import CheckSul
 
 pygame.init
 pygame.font.init()
+pygame.display.set_caption("Sudoku")
 class MainWindow():
     def __init__(self):
         self.height = 750
@@ -165,6 +166,7 @@ class MainWindow():
                     pygame.display.update
 
     def start(self):
+        self.mode_pause = False
         self.live = 3
         self.press = False
         self.start_game = True
