@@ -19,7 +19,7 @@ class MainWindow():
         self.key, self.i, self.j = 0, 0, 0
         self.live = 3
         self.mode_pause = False
-        self.core()
+        # self.core()
 
     def fonts(self, font_size, text, x, y, color = "black"):
         f = pygame.font.Font(None, font_size)
@@ -146,9 +146,9 @@ class MainWindow():
 
     def win(self):
         self.game_over = True
+        pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
         self.fonts(70, "Победа!!!", 300, 330)
         self.fonts(65, "Нажмите любую клавишу", 70, 400)
-        pygame.draw.rect(self.screen, 'white', [(50, 60), (630, 630)])
         pygame.display.update
 
     def draw_numbs(self):
@@ -261,15 +261,7 @@ class MainWindow():
 
     def red_sqrt(self,x1,y1,step):
         pygame.draw.rect(self.screen, 'red', [(x1, y1), (step, step)], 3)
-        
-
-
-# class GameWindow(MainWindow):
-#     def __init__(self):
-#        self.num_bloc = num_bloc # цифра в блоке 
-#        self.status = status # изменяемый блок или нет 
-#        self.corrent = corrent  # верное значение или нет  0 \ 1 
-
 
 if __name__ == '__main__':
     d = MainWindow()
+    d.core()

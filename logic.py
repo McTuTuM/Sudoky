@@ -1,4 +1,3 @@
-import numpy as np
 import random
 import copy
 
@@ -49,7 +48,7 @@ class CheckSul:
             n1, n2 = area1 * 3 + i, area2 * 3 + i
             self.table[n1], self.table[n2] = self.table[n2], self.table[n1]
 
-    def mix(self, amt = 10):
+    def mix(self, amt = 15):
         mix_func = (
 			self.swap_rows_small,
 			self.swap_colums_small,
